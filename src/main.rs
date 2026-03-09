@@ -1,3 +1,14 @@
+//! # viewimg
+//!
+//! This is a simple CLI written in Rust to open images in browsers.
+//! Images are updated at each interval (every 500 ms by default),
+//! which enables users to view their images while altering them.
+//!
+//! ## Usage
+//!
+//! ```bash
+//! viewimg [file]
+//! ```
 use std::{
     env, error,
     fmt::{self, Display},
@@ -6,8 +17,17 @@ use std::{
     process,
 };
 
+/// Help message.
+const HELP_MESSAGE: &str = r#"Usage:
+
+viewimg [FILE_PATH|COMMAND]
+
+Commands:
+    help"#;
+/// Name of output file.
 const OUTPUT_FILE: &str = ".viewimg.html";
 
+/// Main function.
 fn main() {
     if let Err(error) = run() {
         eprintln!("Error: {}", error);
@@ -15,30 +35,37 @@ fn main() {
     }
 }
 
+/// Main run flow.
 fn run() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
-    let args_len = args.len().saturating_sub(1);
-    if args_len == 1 {
-        let relative_path_string = args.get(1).unwrap();
-        let output_file_path_buf = get_output_file_path_buf()?;
-        let path_buf = get_path_buf(relative_path_string)?;
-        create_html(path_buf, output_file_path_buf.clone())?;
-        open_browser(output_file_path_buf)
-    } else {
-        Err(Error::ArgsLenInvalid(args_len))
+    match args.get(1).map(String::as_str) {
+        Some("help") => {
+            println!("{}", HELP_MESSAGE);
+            Ok(())
+        }
+        Some(relative_path_str) => {
+            let path_buf = get_path_buf(relative_path_str)?;
+            let output_file_path_buf = get_output_file_path_buf()?;
+            create_html(path_buf, output_file_path_buf.clone())?;
+            open_browser(output_file_path_buf)
+        }
+        None => Err(Error::NoArgs),
     }
 }
 
+/// Getting the path for the output file.
 fn get_output_file_path_buf() -> Result<PathBuf, Error> {
     let home_path_string = env::var("HOME").map_err(|_| Error::UnableToFindHome)?;
     Ok(PathBuf::from(home_path_string).join(OUTPUT_FILE))
 }
 
-fn get_path_buf(relative_path_string: &String) -> Result<PathBuf, Error> {
-    fs::canonicalize(relative_path_string)
-        .map_err(|_| Error::PathInvalid(relative_path_string.clone()))
+/// Taking the `relative_path_str` and appending the full path.
+fn get_path_buf(relative_path_str: &str) -> Result<PathBuf, Error> {
+    fs::canonicalize(relative_path_str)
+        .map_err(|_| Error::PathInvalid(relative_path_str.to_string()))
 }
 
+/// Creating the HTML file.
 fn create_html(path_buf: PathBuf, output_file_path_buf: PathBuf) -> Result<(), Error> {
     let path_string = path_buf.to_string_lossy();
     let html_string = format!(
@@ -60,6 +87,7 @@ fn create_html(path_buf: PathBuf, output_file_path_buf: PathBuf) -> Result<(), E
         .map_err(|error| Error::UnableToWriteToOutputFile(error))
 }
 
+/// Opens the default browser using the `open` command.
 fn open_browser(output_file_path_buf: PathBuf) -> Result<(), Error> {
     process::Command::new("open")
         .arg(output_file_path_buf)
@@ -68,9 +96,10 @@ fn open_browser(output_file_path_buf: PathBuf) -> Result<(), Error> {
     Ok(())
 }
 
+/// Errors for `viewimg`.
 #[derive(Debug)]
 enum Error {
-    ArgsLenInvalid(usize),
+    NoArgs,
     PathInvalid(String),
     UnableToFindHome,
     UnableToWriteToOutputFile(io::Error),
@@ -80,8 +109,8 @@ enum Error {
 impl Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::ArgsLenInvalid(args_len) => {
-                write!(f, "Expected 1 argument, received {args_len}.")
+            Self::NoArgs => {
+                write!(f, "No arguments given.\n\n{}", HELP_MESSAGE)
             }
             Self::PathInvalid(relative_path_string) => {
                 write!(f, "Path not found: {relative_path_string}.")
@@ -98,7 +127,7 @@ impl Display for Error {
 impl error::Error for Error {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match self {
-            Self::ArgsLenInvalid(_) => None,
+            Self::NoArgs => None,
             Self::PathInvalid(_) => None,
             Self::UnableToFindHome => None,
             Self::UnableToWriteToOutputFile(error) => Some(error),
