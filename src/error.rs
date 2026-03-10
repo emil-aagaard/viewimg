@@ -6,7 +6,6 @@ use std::{
 
 use crate::constants::HELP_MESSAGE;
 
-/// Errors for `viewimg`.
 #[derive(Debug)]
 pub enum Error {
     NoArgs,

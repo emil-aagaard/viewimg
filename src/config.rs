@@ -3,7 +3,6 @@ use crate::{
     error::Error,
 };
 
-/// Configuration struct.
 pub struct Config {
     /// Name of output file.
     pub output_file_name: String,
