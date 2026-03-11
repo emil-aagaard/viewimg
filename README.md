@@ -1,5 +1,22 @@
 # vimage
+Simple CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images keeping track of their changes.
 
-This is a simple CLI written in Rust to open images in browsers.
-Images are updated at each interval (every 500 ms by default),
-which enables users to view their images while altering them.
+## Usage
+    `vimage` <FILE> [OPTIONS]
+    `vimage` [COMMAND]
+
+### Options
+    `--output` <FILENAME>   File name of the output file.
+                            [default: `.vimage.html`]
+    `--output-dir` <DIR>    Directory of the output file.
+                            [default (mac, linux): `HOME` environment variable.]
+                            [default (windows): `USERPROFILE` environment variable.]
+    `--interval` <INT>      Update interval of output image (ms).
+                            [default: 500]
+    `--open` <CMD>          Command to open output file.
+                            [default (mac): `open`]
+                            [default (windows): `start`]
+                            [default (linux): `xdg-open`]
+
+### Commands
+    `help`    Prints this message.

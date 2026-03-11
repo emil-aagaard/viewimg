@@ -2,7 +2,7 @@
 name = "vimage"
 version = "0.1.0"
 edition = "2024"
-description = "This is a simple CLI written in Rust to open images in browsers. Images are updated at each interval (every 500 ms by default), which enables users to view their images while altering them."
+description = "Simple, dependency-free CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images keeping track of their changes."
 license = "MIT"
 repository = "https://github.com/emil-aagaard/vimage"
 readme = "README.md"
