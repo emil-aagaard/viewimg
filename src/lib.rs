@@ -1,8 +1,5 @@
 //! # vimage
-//! Simple CLI to open images in the default browser.
-//! The images are updated at a given interval, so that
-//! the user can edit the images while keeping track of
-//! their changes.
+//! Simple, dependency-free CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images while keeping track of their changes.
 //!
 //! ## Usage
 //!     `vimage` <FILE> [OPTIONS]
