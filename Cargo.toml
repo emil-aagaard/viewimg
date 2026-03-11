@@ -1,8 +1,8 @@
 [package]
 name = "vimage"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
-description = "Simple, dependency-free CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images keeping track of their changes."
+description = "Simple, dependency-free CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images while keeping track of their changes."
 license = "MIT"
 repository = "https://github.com/emil-aagaard/vimage"
 readme = "README.md"

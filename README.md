@@ -1,5 +1,5 @@
 # vimage
-Simple CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images keeping track of their changes.
+Simple CLI to open images in the default browser. The images are updated at a given interval, so that the user can edit the images while keeping track of their changes.
 
 ## Usage
     `vimage` <FILE> [OPTIONS]
@@ -19,4 +19,4 @@ Simple CLI to open images in the default browser. The images are updated at a gi
                             [default (linux): `xdg-open`]
 
 ### Commands
-    `help`    Prints this message.
+    `help`  Prints this message.
